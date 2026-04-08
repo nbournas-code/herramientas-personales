@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis Descuentos Completos — Abril 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --chile: #003DA6; --chile-light: #dce9ff; --chile-text: #002880;
+    --santander: #E31E25; --santander-light: #fde8e8; --santander-text: #b01018;
+    --falabella: #1A9F42; --falabella-light: #d7f5e3; --falabella-text: #0d7a32;
+    --bg: #f4f3f0; --surface: #fff; --border: rgba(0,0,0,0.08); --border-md: rgba(0,0,0,0.13);
+    --text: #1a1a1a; --text-2: #555; --text-3: #999;
+    --r: 12px; --rsm: 8px; --rpill: 100px;
+  }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  /* HEADER */
+  .header { background:var(--surface); border-bottom:1px solid var(--border); padding:1.25rem 1.5rem 0.75rem; position:sticky; top:0; z-index:100; }
+  .header-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem; }
+  .brand h1 { font-size:20px; font-weight:600; letter-spacing:-0.5px; }
+  .brand p { font-size:11px; color:var(--text-3); font-family:'DM Mono',monospace; margin-top:2px; }
+  .updated { font-size:10px; color:var(--text-3); font-family:'DM Mono',monospace; background:var(--bg); padding:3px 9px; border-radius:var(--rpill); border:1px solid var(--border); white-space:nowrap; }
+
+  /* SEARCH */
+  .search-wrap { margin-bottom:0.75rem; }
+  .search-wrap input { width:100%; padding:7px 12px; border:1px solid var(--border-md); border-radius:var(--rpill); font-size:13px; font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); outline:none; }
+  .search-wrap input:focus { border-color:#888; background:var(--surface); }
+
+  /* DAY STRIP */
+  .day-strip { display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; padding-bottom:2px; margin-bottom:0.6rem; }
+  .day-strip::-webkit-scrollbar { display:none; }
+  .day-tab { padding:5px 14px; border-radius:var(--rpill); font-size:12px; font-weight:500; cursor:pointer; border:1px solid var(--border); background:var(--surface); color:var(--text-2); white-space:nowrap; transition:all 0.13s; user-select:none; }
+  .day-tab:hover { background:var(--bg); }
+  .day-tab.active { background:var(--text); color:#fff; border-color:var(--text); }
+  .today-dot { display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--santander); vertical-align:super; margin-left:3px; }
+
+  /* FILTERS */
+  .filter-row { display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-bottom:5px; }
+  .filter-label { font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-3); font-weight:600; margin-right:2px; white-space:nowrap; }
+  .chip { padding:3px 10px; border-radius:var(--rpill); font-size:11px; font-weight:500; cursor:pointer; border:1px solid var(--border); background:var(--surface); color:var(--text-2); transition:all 0.13s; user-select:none; }
+  .chip:hover { border-color:var(--border-md); }
+  .chip.bank-active-all { background:var(--text); color:#fff; border-color:var(--text); }
+  .chip.bank-active-chile { background:var(--chile-light); color:var(--chile-text); border-color:rgba(0,61,166,0.2); }
+  .chip.bank-active-santander { background:var(--santander-light); color:var(--santander-text); border-color:rgba(227,30,37,0.2); }
+  .chip.bank-active-falabella { background:var(--falabella-light); color:var(--falabella-text); border-color:rgba(26,159,66,0.2); }
+  .chip.cat-active { background:var(--text); color:#fff; border-color:var(--text); }
+
+  /* MAIN */
+  .main { max-width:960px; margin:0 auto; padding:1.25rem 1.25rem; }
+  .count-bar { font-size:11px; color:var(--text-3); margin-bottom:0.75rem; font-family:'DM Mono',monospace; }
+  .section-title { font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-3); font-weight:600; margin:1.25rem 0 0.5rem; }
+  .section-title:first-of-type { margin-top:0; }
+  .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:8px; }
+
+  /* CARD */
+  .deal-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; transition:border-color 0.13s; display:flex; flex-direction:column; }
+  .deal-card:hover { border-color:var(--border-md); }
+  .card-top { display:flex; align-items:flex-start; gap:8px; padding:12px 14px 8px; border-left:3px solid var(--acc,#ccc); }
+  .card-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+  .card-main { flex:1; min-width:0; }
+  .card-merchant { font-size:13px; font-weight:600; line-height:1.3; }
+  .card-sub { font-size:11px; color:var(--text-3); margin-top:2px; }
+  .card-discount { font-size:17px; font-weight:600; color:var(--acc,#333); font-family:'DM Mono',monospace; white-space:nowrap; flex-shrink:0; margin-left:6px; }
+  .card-meta { display:flex; align-items:center; gap:5px; padding:0 14px 8px; flex-wrap:wrap; }
+  .bank-badge { font-size:10px; font-weight:600; padding:2px 6px; border-radius:var(--rpill); }
+  .badge-chile { background:var(--chile-light); color:var(--chile-text); }
+  .badge-santander { background:var(--santander-light); color:var(--santander-text); }
+  .badge-falabella { background:var(--falabella-light); color:var(--falabella-text); }
+  .days-pill { font-size:10px; color:var(--text-3); font-family:'DM Mono',monospace; }
+  .tarjeta-badge { font-size:10px; color:var(--text-2); background:var(--bg); border:1px solid var(--border); padding:1px 6px; border-radius:var(--rpill); }
+
+  /* CONDITIONS */
+  .card-cond { border-top:1px solid var(--border); padding:8px 14px; background:#fafafa; display:flex; flex-direction:column; gap:4px; }
+  .cond-row { display:flex; gap:6px; font-size:11px; color:var(--text-2); line-height:1.4; }
+  .cond-ico { font-size:11px; flex-shrink:0; margin-top:1px; opacity:0.65; }
+  .cond-lbl { font-weight:600; color:var(--text-3); font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; flex-shrink:0; }
+
+  /* ACTIONS */
+  .card-actions { padding:6px 14px 10px; display:flex; gap:5px; flex-wrap:wrap; }
+  .btn { font-size:11px; font-weight:500; padding:4px 10px; border-radius:var(--rpill); border:1px solid var(--border-md); background:var(--surface); color:var(--text-2); text-decoration:none; display:inline-flex; align-items:center; gap:3px; transition:all 0.12s; cursor:pointer; }
+  .btn:hover { background:var(--bg); }
+  .btn.primary { background:var(--acc,#333); color:#fff; border-color:transparent; }
+  .btn.primary:hover { opacity:0.85; }
+
+  .empty { grid-column:1/-1; text-align:center; padding:3rem; color:var(--text-3); font-size:13px; }
+  footer { text-align:center; padding:2rem; font-size:10px; color:var(--text-3); font-family:'DM Mono',monospace; line-height:1.6; }
+  @media(max-width:600px){ .header{padding:1rem 1rem 0.5rem;} .main{padding:1rem;} .cards-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="brand">
+      <h1>Mis descuentos — completo</h1>
+      <p>Banco de Chile · Santander · CMR Falabella · Abril 2026</p>
+    </div>
+    <span class="updated" id="updLabel"></span>
+  </div>
+
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Buscar comercio..." oninput="render()">
+  </div>
+
+  <div class="day-strip" id="dayStrip"></div>
+
+  <div style="display:flex;flex-direction:column;gap:5px;padding-bottom:8px;">
+    <div class="filter-row">
+      <span class="filter-label">Banco</span>
+      <span class="chip bank-active-all" data-bank="all" onclick="setBank(this)">Todos</span>
+      <span class="chip" data-bank="chile" onclick="setBank(this)">Banco de Chile</span>
+      <span class="chip" data-bank="santander" onclick="setBank(this)">Santander</span>
+      <span class="chip" data-bank="falabella" onclick="setBank(this)">CMR Falabella</span>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Categoría</span>
+      <span class="chip cat-active" data-cat="all" onclick="setCat(this)">Todas</span>
+      <span class="chip" data-cat="restaurantes" onclick="setCat(this)">Restaurantes</span>
+      <span class="chip" data-cat="mariscos" onclick="setCat(this)">Mariscos/Sushi</span>
+      <span class="chip" data-cat="fastfood" onclick="setCat(this)">Fast food</span>
+      <span class="chip" data-cat="supermercado" onclick="setCat(this)">Supermercado</span>
+      <span class="chip" data-cat="farmacia" onclick="setCat(this)">Farmacias</span>
+      <span class="chip" data-cat="belleza" onclick="setCat(this)">Belleza/Salud</span>
+      <span class="chip" data-cat="cine" onclick="setCat(this)">Cine/Entret.</span>
+      <span class="chip" data-cat="delivery" onclick="setCat(this)">Delivery</span>
+      <span class="chip" data-cat="retail" onclick="setCat(this)">Retail/Moda</span>
+      <span class="chip" data-cat="hogar" onclick="setCat(this)">Hogar</span>
+      <span class="chip" data-cat="viajes" onclick="setCat(this)">Viajes</span>
+      <span class="chip" data-cat="educacion" onclick="setCat(this)">Educación</span>
+      <span class="chip" data-cat="otros" onclick="setCat(this)">Otros</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="count-bar" id="countBar"></div>
+  <div id="output"></div>
+</div>
+
+<footer>
+  Fuentes: bancochile.cl · banco.santander.cl · bancofalabella.cl · americanexpress.com/es-cl · neatpagos.com<br>
+  Verifica siempre condiciones vigentes antes de pagar. Descuentos sujetos a cambios mensuales.
+</footer>
+
+<script>
+const DAYS = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+const TODAY_JS = new Date().getDay();
+const TODAY_IDX = TODAY_JS === 0 ? 6 : TODAY_JS - 1;
+const ALL=[0,1,2,3,4,5,6], WD=[0,1,2,3,4];
+
+// acc: accent color hex, tarjeta: specific card needed (null=any)
+const D=[
+  // ============ SANTANDER — RESTAURANTES FINE DINING (AMEX) ============
+  {m:"Jerónimo",cat:"restaurantes",bank:"santander",dis:"50%",icon:"🍷",days:[0],tarjeta:"AMEX Santander",mod:"Presencial",tope:"$50.000/cuenta/mes",act:"Pedir descuento al pagar",res:"https://www.jeronimorestaurante.cl",note:"Fine dining"},
+  {m:"Dagan",cat:"restaurantes",bank:"santander",dis:"50%",icon:"🍷",days:[1],tarjeta:"AMEX Santander",mod:"Presencial",tope:"$50.000/cuenta/mes",act:"Pedir descuento al pagar",res:"https://dagan.cl",note:""},
+  {m:"Demencia",cat:"restaurantes",bank:"santander",dis:"50%",icon:"🍽️",days:[2],tarjeta:"AMEX Santander",mod:"Presencial",tope:"$50.000/cuenta/mes",act:"Pedir descuento al pagar",res:null,note:""},
+  {m:"Dominga Nikkei",cat:"mariscos",bank:"santander",dis:"50%",icon:"🍱",days:[3],tarjeta:"AMEX Santander",mod:"Presencial",tope:"$50.000/cuenta/mes",act:"Pedir descuento al pagar",res:"https://dominganikkei.cl",note:""},
+  {m:"Misceláneo",cat:"restaurantes",bank:"santander",dis:"50%",icon:"🥂",days:[4],tarjeta:"AMEX Santander",mod:"Presencial",tope:"$50.000/cuenta/mes",act:"Pedir descuento al pagar",res:"https://www.miscelaneo.cl",note:""},
+  {m:"Kato",cat:"restaurantes",bank:"santander",dis:"50%",icon:"🍽️",days:[5],tarjeta:"AMEX Santander",mod:"Presencial",tope:"$50.000/cuenta/mes",act:"Pedir descuento al pagar",res:null,note:""},
+  {m:"Sabor y Aroma",cat:"restaurantes",bank:"santander",dis:"50%",icon:"🍽️",days:[6],tarjeta:"AMEX Santander",mod:"Presencial",tope:"$50.000/cuenta/mes",act:"Pedir descuento al pagar",res:null,note:""},
+  // ============ SANTANDER — RESTAURANTES 40% LUNES ============
+  {m:"Social Bar",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍸",days:[0],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Just Burger",cat:"fastfood",bank:"santander",dis:"40%",icon:"🍔",days:[0],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"CUK",cat:"fastfood",bank:"santander",dis:"40%",icon:"🍗",days:[0,2],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Work/Café Santander",cat:"restaurantes",bank:"santander",dis:"40%",icon:"☕",days:WD,tarjeta:null,mod:"Presencial y workcafe.cl",tope:"$20.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"CuracaRibs",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🥩",days:[0],tarjeta:null,mod:"Online",tope:"$40.000",act:"6 primeros dígitos en web",res:"https://curacaribs.cl",note:"Solo delivery web"},
+  {m:"Pallozzi",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍝",days:[0],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"AU restaurant",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[0],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"El Mundo del Vino",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍷",days:[0],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Kilú - Casa de Carnes",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🥩",days:[0],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Nolia",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[0],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  // ============ SANTANDER — RESTAURANTES 40% MARTES ============
+  {m:"Dominó",cat:"fastfood",bank:"santander",dis:"40%",icon:"🍕",days:[1],tarjeta:null,mod:"App Club Dominó + 20% locales",tope:"$40.000",act:"App: 6 dígitos en Cupones. Presencial: pedir al pagar",res:null,note:""},
+  {m:"Vapiano",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍝",days:[1,3],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:"https://vapiano.cl",note:"También jueves"},
+  {m:"Kintaro Ramen Bar",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍜",days:[1],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:"https://kintaroramen.cl",note:""},
+  {m:"Bozzo Chocolates",cat:"otros",bank:"santander",dis:"40%",icon:"🍫",days:[1],tarjeta:null,mod:"Presencial y bozzochocolates.cl",tope:"$30.000",act:"Mostrar tarjeta / pagar con Mercado Pago",res:"https://www.bozzochocolates.cl",note:""},
+  {m:"El Taller",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[1],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Enigma",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[1],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Pizzería Capri",cat:"fastfood",bank:"santander",dis:"40%",icon:"🍕",days:[1],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"eCook",cat:"restaurantes",bank:"santander",dis:"40%",icon:"👨‍🍳",days:[1,3],tarjeta:null,mod:"Presencial y delivery propio",tope:"$40.000",act:"6 dígitos en web",res:"https://www.ecook.cl",note:"También jueves"},
+  {m:"Melt Pizzas",cat:"fastfood",bank:"santander",dis:"45%",icon:"🍕",days:[1],tarjeta:"WorldMember Limited",mod:"Presencial, App Melt y meltpizzas.com",tope:"Sin tope indicado",act:"6 dígitos como código",res:"https://www.meltpizzas.com",note:""},
+  {m:"Brunapoli",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍝",days:[1],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Aquality",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🥗",days:[1],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Vicenta",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[1],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"La Parrilla del Guatón Jeréz",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🥩",days:[1],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  // ============ SANTANDER — MIÉRCOLES DE SABORES ============
+  {m:"Miércoles de Sabores (+250 rest.)",cat:"restaurantes",bank:"santander",dis:"25–50%",icon:"🎉",days:[2],tarjeta:null,mod:"Presencial y algunos delivery",tope:"~$40.000 (varía)",act:"Mostrar tarjeta / 6 dígitos en app",res:"https://banco.santander.cl/beneficios/descuentos-restaurantes",note:"El día con más opciones"},
+  {m:"Streat Burger",cat:"fastfood",bank:"santander",dis:"40%",icon:"🍔",days:[2],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Chili's",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🌶️",days:[2],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Madre Pizza",cat:"fastfood",bank:"santander",dis:"30%",icon:"🍕",days:[2],tarjeta:null,mod:"Local y delivery propio",tope:"$40.000",act:"Pedir al pagar / 6 dígitos",res:"https://madrepizza.cl",note:"Pedro Calvo Barros 5338 Ñuñoa"},
+  {m:"Cosenza",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍝",days:[2],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"AM Dulcería",cat:"otros",bank:"santander",dis:"40%",icon:"🍰",days:[2],tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Berlin Döner Kebab",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🌯",days:[2],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Chicken Love You",cat:"fastfood",bank:"santander",dis:"40%",icon:"🍗",days:[2],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Brunetti",cat:"restaurantes",bank:"santander",dis:"40%",icon:"☕",days:[2],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Kobo Sushi",cat:"mariscos",bank:"santander",dis:"40%",icon:"🍣",days:[2],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"La Bifería",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🥩",days:[2],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Delivery Gourmet",cat:"delivery",bank:"santander",dis:"30%",icon:"🛵",days:[2],tarjeta:null,mod:"Delivery online",tope:"$40.000",act:"6 dígitos en web",res:"https://deliverygourmet.cl",note:""},
+  {m:"AC Kitchen",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[2],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Piegari",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍝",days:[2],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Kento Sushi",cat:"mariscos",bank:"santander",dis:"30%",icon:"🍣",days:[2],tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Kevin Bacon",cat:"fastfood",bank:"santander",dis:"30%",icon:"🥓",days:[2],tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Curry",cat:"restaurantes",bank:"santander",dis:"30%",icon:"🍛",days:[2],tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Rocoto",cat:"restaurantes",bank:"santander",dis:"30%",icon:"🌶️",days:[2],tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Juan Esparraguito",cat:"restaurantes",bank:"santander",dis:"30%",icon:"🍽️",days:[2],tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Bar Porfirio",cat:"restaurantes",bank:"santander",dis:"30%",icon:"🍸",days:[2],tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Hijo del Inca",cat:"restaurantes",bank:"santander",dis:"30%",icon:"🫙",days:[2],tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Expendio Montt",cat:"restaurantes",bank:"santander",dis:"30%",icon:"🍽️",days:[2],tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  // ============ SANTANDER — JUEVES ============
+  {m:"Vincenzo Cucina",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍝",days:[3],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"La Sociedad",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[3],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Cascade Bistró",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🥗",days:[3],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Burger King",cat:"fastfood",bank:"santander",dis:"40%",icon:"🍔",days:[3],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Le Vice Chocolat",cat:"otros",bank:"santander",dis:"40%",icon:"🍫",days:[3],tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Estró",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[3],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Corrales del Sur",cat:"restaurantes",bank:"santander",dis:"30%",icon:"🥩",days:[3],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  // ============ SANTANDER — VIERNES ============
+  {m:"Pizzería Popular",cat:"fastfood",bank:"santander",dis:"40%",icon:"🍕",days:[4],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Zía Bistro",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[4],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Vértigo",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍸",days:[4],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Fork",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[4],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"De Pura Madre",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🥩",days:[4],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Piano Gourmet",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[4],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Sakura Sushi",cat:"mariscos",bank:"santander",dis:"40%",icon:"🍣",days:[4],tarjeta:"WorldMember Limited",mod:"Locales, sakura.cl y venta tel.",tope:"Sin tope",act:"6 dígitos como código",res:"https://sakura.cl",note:"Solo rolls y hosomaki"},
+  {m:"Cosecha del Mar",cat:"mariscos",bank:"santander",dis:"40%",icon:"🦞",days:[4],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Gatopardo Bistró",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[4],tarjeta:"WorldMember Limited",mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  // ============ SANTANDER — SÁBADO ============
+  {m:"Avatar Sushi",cat:"mariscos",bank:"santander",dis:"40%",icon:"🍣",days:[5],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Bar TPM",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍸",days:[5],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"La Yunta",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🥩",days:[5],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"La Maestranza",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[5],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  // ============ SANTANDER — DOMINGO ============
+  {m:"Green Lab",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🥗",days:[6],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Anima Cocktail Lab",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍸",days:[6],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Lumiere Bistró",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🍽️",days:[6],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  {m:"Exò Nuit",cat:"restaurantes",bank:"santander",dis:"40%",icon:"🌙",days:[6],tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:null,note:""},
+  // ============ SANTANDER — NO GASTRONÓMICO ============
+  {m:"Knop Farmacias",cat:"farmacia",bank:"santander",dis:"dctos.",icon:"🌿",days:[1,3],tarjeta:null,mod:"Presencial y farmaciasknop.com",tope:"Sin tope",act:"Mostrar tarjeta / pagar en web",res:"https://www.farmaciasknop.com",note:"Mar y jue"},
+  {m:"PedidosYa",cat:"delivery",bank:"santander",dis:"10%",icon:"🛵",days:[0,1,2,3],tarjeta:null,mod:"App y web PedidosYa",tope:"Sin tope",act:"Seleccionar débito Santander",res:"https://www.pedidosya.cl",note:"Lun–Jue, débito"},
+  {m:"Garmin",cat:"retail",bank:"santander",dis:"10%",icon:"⌚",days:ALL,tarjeta:null,mod:"Tiendas y garminstore.cl",tope:"Sin tope",act:"Mostrar tarjeta al pagar",res:"https://garminstore.cl/collections/santander",note:""},
+  {m:"Waterdrop",cat:"otros",bank:"santander",dis:"dctos.",icon:"💧",days:ALL,tarjeta:null,mod:"cl.waterdrop.com",tope:"$30.000",act:"Cupón en web",res:"https://cl.waterdrop.com",note:"Compras sobre $20.000"},
+  {m:"Coderhouse",cat:"educacion",bank:"santander",dis:"dctos.",icon:"💻",days:ALL,tarjeta:null,mod:"coderhouse.cl",tope:"Sin tope",act:"Pagar con tarjeta Santander",res:"https://www.coderhouse.cl",note:"Cursos y carreras online"},
+  {m:"Alma Salud",cat:"belleza",bank:"santander",dis:"hasta 40%",icon:"💆",days:ALL,tarjeta:null,mod:"Presencial (Las Condes)",tope:"Sin tope",act:"Mostrar tarjeta al pagar",res:null,note:"Masajes, kinesiología, holísticos"},
+  {m:"LATAM Pass (millas)",cat:"viajes",bank:"santander",dis:"millas extra",icon:"✈️",days:ALL,tarjeta:"LATAM Pass Santander",mod:"Todo comercio",tope:"Según categoría de tarjeta",act:"Automático al pagar",res:"https://banco.santander.cl/personas/tarjetas",note:"Acumulas en cada compra"},
+  // ============ BANCO DE CHILE ============
+  {m:"McDonald's",cat:"fastfood",bank:"chile",dis:"30%",icon:"🍔",days:WD,tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:null,note:"Días seleccionados"},
+  {m:"La Fete",cat:"restaurantes",bank:"chile",dis:"30%",icon:"🍽️",days:WD,tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:"https://www.lafete.cl",note:""},
+  {m:"Tommy Beans",cat:"restaurantes",bank:"chile",dis:"30%",icon:"🫘",days:WD,tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:"https://www.tommybeans.cl",note:""},
+  {m:"Juan Maestro",cat:"restaurantes",bank:"chile",dis:"30%",icon:"🥩",days:WD,tarjeta:null,mod:"Presencial",tope:"$40.000",act:"Mostrar tarjeta al pagar",res:"https://www.juanmaestro.cl",note:""},
+  {m:"Mamut",cat:"fastfood",bank:"chile",dis:"30%",icon:"🍔",days:WD,tarjeta:null,mod:"Presencial",tope:"$30.000",act:"Mostrar tarjeta al pagar",res:"https://mamut.cl",note:""},
+  {m:"Doggis",cat:"fastfood",bank:"chile",dis:"30%",icon:"🌭",days:ALL,tarjeta:null,mod:"Presencial y app",tope:"$15.000",act:"Mostrar tarjeta al pagar",res:null,note:"Todos los días"},
+  {m:"Wendy's",cat:"fastfood",bank:"chile",dis:"dctos.",icon:"🍔",days:WD,tarjeta:null,mod:"Presencial",tope:"Varía",act:"Mostrar tarjeta",res:null,note:"Promociones seleccionadas"},
+  {m:"China Wok",cat:"restaurantes",bank:"chile",dis:"dctos.",icon:"🥡",days:WD,tarjeta:null,mod:"Presencial",tope:"Varía",act:"Mostrar tarjeta",res:null,note:""},
+  {m:"KFC",cat:"fastfood",bank:"chile",dis:"dctos.",icon:"🍗",days:WD,tarjeta:null,mod:"Presencial",tope:"Varía",act:"Mostrar tarjeta",res:null,note:"Ocasional"},
+  {m:"Starbucks",cat:"restaurantes",bank:"chile",dis:"dctos.",icon:"☕",days:WD,tarjeta:null,mod:"Presencial",tope:"Varía",act:"Mostrar tarjeta",res:null,note:"Ocasional"},
+  {m:"Revés Derecho",cat:"retail",bank:"chile",dis:"20%",icon:"👕",days:[2,5],tarjeta:null,mod:"Presencial mié + web/presencial sáb",tope:"$120.000",act:"Presencial: 6 dígitos + RUT. Web: 6 dígitos al comprar",res:"https://www.revesderecho.com",note:""},
+  {m:"Sky Airline (Sky+)",cat:"viajes",bank:"chile",dis:"dctos. vuelos",icon:"✈️",days:ALL,tarjeta:null,mod:"skyairline.com",tope:"Varía por tarifa",act:"Seleccionar tarjeta Chile al pagar",res:"https://www.skyairline.com",note:"Alianza permanente"},
+  {m:"Dólares-Premio",cat:"viajes",bank:"chile",dis:"cashback USD",icon:"💵",days:ALL,tarjeta:"VISA crédito Chile",mod:"Compras internacionales",tope:"Sin tope acumulación",act:"Automático, canjear en bancochile.cl",res:"https://sitiospublicos.bancochile.cl/personas/beneficios",note:""},
+  {m:"Travel Club (viajes)",cat:"viajes",bank:"chile",dis:"dctos. agencia",icon:"🗺️",days:ALL,tarjeta:null,mod:"travelclub.cl",tope:"Varía",act:"Pagar con tarjeta Chile",res:"https://sitiospublicos.bancochile.cl/personas/beneficios",note:""},
+  {m:"Mascotas (tiendas adheridas)",cat:"otros",bank:"chile",dis:"dctos.",icon:"🐾",days:ALL,tarjeta:null,mod:"Presencial y online",tope:"Varía por comercio",act:"Mostrar tarjeta al pagar",res:"https://sitiospublicos.bancochile.cl/personas/beneficios",note:""},
+  {m:"Bienestar / salud adheridos",cat:"belleza",bank:"chile",dis:"dctos.",icon:"🧘",days:ALL,tarjeta:null,mod:"Presencial",tope:"Varía",act:"Mostrar tarjeta al pagar",res:"https://sitiospublicos.bancochile.cl/personas/beneficios",note:"Ver app"},
+  // ============ CMR FALABELLA ============
+  {m:"Tottus",cat:"supermercado",bank:"falabella",dis:"dctos. + puntos",icon:"🛒",days:ALL,tarjeta:null,mod:"Presencial y tottus.cl",tope:"Varía por promo",act:"Automático con CMR + cupones en app",res:"https://www.tottus.cl",note:""},
+  {m:"Falabella.com",cat:"retail",bank:"falabella",dis:"3–6 CSI + dctos.",icon:"🛍️",days:ALL,tarjeta:null,mod:"Online y presencial",tope:"Sin tope",act:"Automático al pagar con CMR",res:"https://www.falabella.com/falabella-cl/collection/descuentos-cmr",note:"Puntos extra en cada compra"},
+  {m:"Sodimac",cat:"hogar",bank:"falabella",dis:"puntos extra",icon:"🔨",days:ALL,tarjeta:null,mod:"Presencial y sodimac.cl",tope:"Sin tope acumulación",act:"Automático al pagar con CMR",res:"https://www.sodimac.cl",note:""},
+  {m:"Cruz Verde",cat:"farmacia",bank:"falabella",dis:"dctos.",icon:"💊",days:ALL,tarjeta:null,mod:"Presencial y cruzverde.cl",tope:"Varía por producto",act:"Mostrar CMR al pagar",res:"https://www.cruzverde.cl",note:""},
+  {m:"Farmacias Ahumada (FASA)",cat:"farmacia",bank:"falabella",dis:"dctos.",icon:"💊",days:ALL,tarjeta:null,mod:"Presencial y fasa.cl",tope:"Varía por producto",act:"Mostrar CMR al pagar",res:"https://www.fasa.cl",note:""},
+  {m:"Club Restaurantes CMR",cat:"restaurantes",bank:"falabella",dis:"hasta 40%",icon:"🍽️",days:ALL,tarjeta:null,mod:"Solo presencial. Requiere reserva",tope:"$50.000/cuenta",act:"Reservar online, pagar con CMR",res:"https://clubderestaurantescmr.resermap.com/busqueda/region-santiago",note:"Cientos de restaurantes"},
+  {m:"Cinemark",cat:"cine",bank:"falabella",dis:"dctos. entradas",icon:"🎬",days:ALL,tarjeta:null,mod:"Presencial y cinemark.cl",tope:"Sin tope",act:"Seleccionar CMR al pagar",res:"https://www.cinemark.cl",note:""},
+  {m:"Dunkin'",cat:"fastfood",bank:"falabella",dis:"dctos.",icon:"🍩",days:ALL,tarjeta:null,mod:"Presencial",tope:"Sin tope",act:"Mostrar CMR al pagar",res:null,note:""},
+  {m:"McDonald's (oport. app)",cat:"fastfood",bank:"falabella",dis:"dctos.",icon:"🍔",days:ALL,tarjeta:null,mod:"App Banco Falabella",tope:"Varía",act:"Ver oportunidades en app",res:null,note:""},
+  {m:"Viajes Falabella",cat:"viajes",bank:"falabella",dis:"canje maletas + dctos.",icon:"✈️",days:ALL,tarjeta:null,mod:"viajesfalabella.cl",tope:"Según puntos",act:"Canjear CMR Puntos en Viajes Falabella",res:"https://www.viajesfalabella.cl",note:"Maleta canjeable con CMR Puntos"},
+  {m:"Vestuario Falabella",cat:"retail",bank:"falabella",dis:"hasta 40%",icon:"👔",days:ALL,tarjeta:null,mod:"Online y presencial",tope:"Varía por ítem",act:"Pagar con CMR (dctos. en selección)",res:"https://www.falabella.com",note:"Nueva temporada"},
+  {m:"Belleza Falabella",cat:"belleza",bank:"falabella",dis:"hasta 40%",icon:"💄",days:ALL,tarjeta:null,mod:"Online y presencial",tope:"Varía",act:"Pagar con CMR",res:"https://www.falabella.com",note:"Higiene, salud y belleza"},
+  {m:"Tecnología Falabella",cat:"retail",bank:"falabella",dis:"CSI + dctos.",icon:"💻",days:ALL,tarjeta:null,mod:"Online y presencial",tope:"Sin tope",act:"Pagar con CMR (cuotas sin interés frecuentes)",res:"https://www.falabella.com",note:""},
+  {m:"Seguros Falabella",cat:"otros",bank:"falabella",dis:"dctos. SOAP + vida",icon:"🔒",days:ALL,tarjeta:null,mod:"segurosfalabella.com",tope:"Sin tope",act:"Pagar con CMR",res:"https://web.segurosfalabella.com/cl/",note:"Auto, vida, salud, viaje"},
+  {m:"CMR Puntos (canje gral.)",cat:"otros",bank:"falabella",dis:"acumulas en todo",icon:"⭐",days:ALL,tarjeta:null,mod:"Toda compra CMR",tope:"Máx canje 720.000 pts",act:"Automático — canjear en tienda CMR puntos",res:"https://www.bancofalabella.cl/cmr-puntos",note:"1.000 pts = $1.500"},
+];
+
+const CAT_NAMES={restaurantes:"Restaurantes",mariscos:"Mariscos y sushi",fastfood:"Fast food",supermercado:"Supermercado",farmacia:"Farmacias",belleza:"Belleza y salud",cine:"Cine y entret.",delivery:"Delivery",retail:"Retail y moda",hogar:"Hogar",viajes:"Viajes",educacion:"Educación",otros:"Otros"};
+const CAT_ORDER=["restaurantes","mariscos","fastfood","supermercado","farmacia","belleza","cine","delivery","retail","hogar","viajes","educacion","otros"];
+const BANK_COLOR={chile:"#003DA6",santander:"#E31E25",falabella:"#1A9F42"};
+const BANK_LABEL={chile:"Bco. Chile",santander:"Santander",falabella:"CMR Falabella"};
+const BANK_BADGE={chile:"badge-chile",santander:"badge-santander",falabella:"badge-falabella"};
+
+let activeBank="all", activeCat="all", activeDay=TODAY_IDX;
+
+function shortDays(days){
+  const a=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
+  if(days.length===7) return "Todos";
+  if(JSON.stringify(days)===JSON.stringify(WD)) return "Lun–Vie";
+  return days.map(d=>a[d]).join(", ");
+}
+
+function buildTabs(){
+  const strip=document.getElementById("dayStrip");
+  DAYS.forEach((d,i)=>{
+    const el=document.createElement("div");
+    el.className="day-tab"+(i===activeDay?" active":"");
+    el.innerHTML=i===TODAY_IDX?`${d}<span class="today-dot"></span>`:d;
+    el.onclick=()=>{ activeDay=i; document.querySelectorAll(".day-tab").forEach((t,j)=>t.classList.toggle("active",j===i)); render(); };
+    strip.appendChild(el);
+  });
+}
+
+function setBank(el){
+  const b=el.dataset.bank;
+  document.querySelectorAll(".chip[data-bank]").forEach(c=>c.classList.remove("bank-active-all","bank-active-chile","bank-active-santander","bank-active-falabella"));
+  el.classList.add("bank-active-"+b);
+  activeBank=b; render();
+}
+
+function setCat(el){
+  document.querySelectorAll(".chip[data-cat]").forEach(c=>c.classList.remove("cat-active"));
+  el.classList.add("cat-active"); activeCat=el.dataset.cat; render();
+}
+
+function cardHTML(d){
+  const acc=BANK_COLOR[d.bank];
+  const actions=[];
+  if(d.res) actions.push(`<a class="btn primary" href="${d.res}" target="_blank" style="--acc:${acc}">Reservar / ver →</a>`);
+  const condRows=[
+    {ico:"💰",lbl:"Tope",val:d.tope},
+    {ico:"📍",lbl:"Modalidad",val:d.mod},
+    {ico:"💳",lbl:"Tarjeta",val:d.tarjeta||(d.bank==="santander"?"Cualquier tarjeta Santander (crédito y débito)":d.bank==="chile"?"Cualquier tarjeta Banco de Chile (crédito y débito)":"CMR Falabella (crédito o débito)")},
+    {ico:"▶️",lbl:"Activar",val:d.act},
+  ].map(r=>`<div class="cond-row"><span class="cond-ico">${r.ico}</span><span><span class="cond-lbl">${r.lbl}: </span>${r.val}</span></div>`).join("");
+  const noteRow=d.note?`<div class="cond-row"><span class="cond-ico">ℹ️</span><span>${d.note}</span></div>`:"";
+  return `<div class="deal-card" style="--acc:${acc}">
+    <div class="card-top" style="border-left-color:${acc}">
+      <div class="card-icon">${d.icon}</div>
+      <div class="card-main">
+        <div class="card-merchant">${d.m}</div>
+        <div class="card-sub">${CAT_NAMES[d.cat]||d.cat}</div>
+      </div>
+      <div class="card-discount">${d.dis}</div>
+    </div>
+    <div class="card-meta">
+      <span class="bank-badge ${BANK_BADGE[d.bank]}">${BANK_LABEL[d.bank]}</span>
+      <span class="days-pill">${shortDays(d.days)}</span>
+      ${d.tarjeta?`<span class="tarjeta-badge">${d.tarjeta}</span>`:""}
+    </div>
+    <div class="card-cond">${condRows}${noteRow}</div>
+    ${actions.length?`<div class="card-actions">${actions.join("")}</div>`:""}
+  </div>`;
+}
+
+function render(){
+  const q=(document.getElementById("searchInput").value||"").toLowerCase().trim();
+  const filtered=D.filter(d=>{
+    const dayOk=d.days.includes(activeDay);
+    const bankOk=activeBank==="all"||d.bank===activeBank;
+    const catOk=activeCat==="all"||d.cat===activeCat;
+    const searchOk=!q||d.m.toLowerCase().includes(q)||d.cat.toLowerCase().includes(q)||(d.note&&d.note.toLowerCase().includes(q));
+    return dayOk&&bankOk&&catOk&&searchOk;
+  });
+
+  document.getElementById("countBar").textContent=filtered.length===0?"":
+    `${filtered.length} descuento${filtered.length!==1?"s":""} — ${DAYS[activeDay]}${q?" · búsqueda: "+q:""}`;
+
+  if(filtered.length===0){
+    document.getElementById("output").innerHTML=`<div class="empty">Sin resultados para este filtro 🤷</div>`;
+    return;
+  }
+
+  let html="";
+  CAT_ORDER.forEach(cat=>{
+    const group=filtered.filter(d=>d.cat===cat);
+    if(!group.length) return;
+    if(activeCat==="all") html+=`<div class="section-title">${CAT_NAMES[cat]||cat}</div>`;
+    html+=`<div class="cards-grid">`;
+    group.forEach(d=>html+=cardHTML(d));
+    html+=`</div>`;
+  });
+
+  document.getElementById("output").innerHTML=html;
+}
+
+const now=new Date();
+document.getElementById("updLabel").textContent="Abril 2026 · "+now.toLocaleDateString("es-CL",{day:"numeric",month:"short"});
+buildTabs();
+render();
+</script>
+</body>
+</html>
